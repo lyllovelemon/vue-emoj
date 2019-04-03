@@ -15,7 +15,7 @@
         <div class="chat-item" @click="getContact(index)" :class="chatId===index?'active':''"
              v-for="(item,index) in chatInfo" :key="index">
           <div class="avatar">
-            <img src="../../images/dialog/avatar.jpg" alt="">
+            <img src="./avatar.jpg" alt="">
           </div>
           <div class="info">
             <p class="nickname">{{item.name}}</p>
