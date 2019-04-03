@@ -330,10 +330,9 @@
     height: 100%;
     max-width: 1000px;
     min-width: 800px;
-    /*margin: 0 auto;*/
-    margin-left: 20px;
+    margin: 0 auto;
     padding-bottom: 40px;
-
+    border: 1px solid #eeeeee;
     .icon {
       width: 15px;
       height: 15px;
@@ -353,6 +352,7 @@
 
       .search-bar {
         width: 150px;
+        margin-left: 10px;
       }
 
       .name {
