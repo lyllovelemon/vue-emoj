@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import HelloWorld from '@/components/HelloWorld'
-import emotion from '../components/emotion/index';
+import dialog from '../components/dialog/index';
 Vue.use(Router)
 
 export default new Router({
@@ -11,9 +11,9 @@ export default new Router({
       name: 'HelloWorld',
       component: HelloWorld
     },{
-      path:'/emotion',
-      name:'emotion',
-      component:emotion
+      path:'/dialog',
+      name:'dialog',
+      component:dialog
     }
   ]
 })

@@ -99,7 +99,7 @@
   </div>
 </template>
 <script>
-  import '../../style/iconfont';
+  import '../../assets/iconfont';
   import emotion from '../emotion/index';
 
   export default {
@@ -135,7 +135,6 @@
       openEmoj() {
         this.showEmoj = !this.showEmoj;
       },
-      create() {},
       //获取发送消息实时时间(公众号)
       getTime() {
         let time = new Date();
