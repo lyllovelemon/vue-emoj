@@ -83,43 +83,60 @@
   </div>
 </template>
 <script>
-  import './index.less'
   import '../../assets/iconfont';
-  import emotion from '../emotion/index';
-
+  import './index.less';
+  import EmotionEditor from '../../components/emotion-textarea/EmotionEditor.vue';
+  import EmotionPanel from '../../components/emotion-textarea/EmotionPanel.vue';
   export default {
     components: {
-      emotion
+      EmotionEditor,
+      EmotionPanel
     },
     data() {
       return {
-        input: '',
         chatInfo: [
-          { avatar: '', name: '微信昵称', msg: '最近一条消息', num: 1 },
-          { avatar: '', name: '微信昵称', msg: '最近一条消息', num: 1 },
-          { avatar: '', name: '微信昵称', msg: '最近一条消息', num: 1 },
-          { avatar: '', name: '微信昵称', msg: '最近一条消息', num: 1 },
-          { avatar: '', name: '微信昵称', msg: '最近一条消息', num: 1 },
-          { avatar: '', name: '微信昵称', msg: '最近一条消息', num: 1 }
+          { avatar: '', name: '微信昵称', msg: 'hello', num: 1 },
+          { avatar: '', name: '微信昵称', msg: '哈哈哈', num: 1 },
+          { avatar: '', name: '小可爱', msg: '我只是路过', num: 1 },
+          { avatar: '', name: '哈哈哈', msg: '我是一只小绵羊', num: 1 },
+          { avatar: '', name: '大猪蹄子', msg: '我还有话要说', num: 1 },
+          { avatar: '', name: 'test', msg: '我是一手烤牛油', num: 1 }
         ],
-        emojType: [{ name: 'qq表情' }],
         isShow: false,
-        txt: null,
-        senMsg: [],
-        otherMsg: ['omg', 'fseg', 'sgdfdhfdh'],
-        showEmoj: false,
+        sendMsg: [
+          { id: 0, msg: [], date: [] },
+          { id: 1, msg: [], date: [] },
+          { id: 2, msg: [], date: [] },
+          { id: 3, msg: [], date: [] },
+          { id: 4, msg: [], date: [] },
+          { id: 5, msg: [], date: [] }
+        ],
+        otherMsg: [
+          { id: 0, msg: 'Hello', date: '14:00' },
+          { id: 1, msg: '哈哈哈', date: '12:30' },
+          { id: 2, msg: '我只是路过', date: '10:25' },
+          { id: 3, msg: '我是一只小绵羊', date: '14:30' },
+          { id: 4, msg: '我还有话要说', date: '18:45' },
+          { id: 5, msg: '我是一手烤牛油', date: '21:30' }
+        ],
         content: '',
-        chatId: null,
+        chatId: -1,
         sendImg: '',
-        date: '14:00',
         sendDate: '12:00',
-        totalDate: ''
+        totalDate: '',
+        showExpression: false,
+        dialogVisible: false,
+        expression: [
+          '你好，请问有什么可以帮到您？',
+          '抱歉让你久等了。',
+          '这是一条很长的常用语但是很长的话打打电话爱仕达拉丝机大数据大数据阿萨砍价的啊将大家的',
+          '这是一条很长的常用语但是很长的话打打电话爱仕达拉丝机大数据大数据阿萨砍价的啊将大家的'
+        ],
+        wordValue: '',
+        searchText: '搜索'
       };
     },
     methods: {
-      openEmoj() {
-        this.showEmoj = !this.showEmoj;
-      },
       //获取发送消息实时时间(公众号)
       getTime() {
         let time = new Date();
@@ -141,8 +158,11 @@
           minutes = '0' + minutes;
         }
         let second = time.getSeconds();
+        if (second < 10) {
+          second = '0' + minutes;
+        }
         this.sendDate = `${hours}:${minutes}`;
-        this.totalDate = `${year}-${currentMonth}-${day} ${hours}:${minutes}`;
+        this.totalDate = `${year}-${currentMonth}-${day} ${hours}:${minutes}:${second}`;
         let b = '2018-12-08 12:00';
         let dayBeween = this.dayBeween(this.totalDate, b);
         if (dayBeween > 1) {
@@ -175,137 +195,79 @@
         let newDayYear = newDay.substring(0, 4);
         let beween = Math.abs(dayYear - newDayYear);
         return beween;
-  },
-      openFile() {},
+      },
       getContact(e) {
         this.chatId = e;
+        this.chatInfo[e].num = 0;
+        //根据id号查询聊天记录Todo
+        console.log('chatId', this.chatId);
       },
-      sendMsg() {
-        this.senMsg.push(this.txt);
-        if (this.sendImg) {
+      handleSendMsg() {
+        const cache = this.$refs.emotionEditor.getLocalText();
+        if (this.chatId !== -1) {
+          this.sendMsg[this.chatId].msg.push(cache);
+          this.getTime();
+          this.sendMsg[this.chatId].date.push(this.sendDate);
+          console.log('我发送的msg', this.sendMsg);
+          setTimeout(() => {
+            this.$refs.emotionEditor.empty();
+          }, 200);
         }
-        this.txt = null;
-        this.getTime();
       },
-      closeEmoj() {
-        this.showEmoj = false;
+      onPickedEmoji(img) {
+        console.log('onPickedEmoji', img);
+        this.$refs.emotionEditor.insertEmoji(img);
       },
-      handleEmotion(i) {
-        this.content += i;
-        this.sendImg = this.content.replace(/\#[\u4E00-\u9FA5]{1,3}\;/gi, this.emotion);
+      onPickedExpression() {
+        this.showExpression = true;
       },
-      // 将匹配结果替换表情图片
-      emotion(res) {
-        let word = res.replace(/\#|\;/gi, '');
-        const list = [
-          '微笑',
-          '撇嘴',
-          '色',
-          '发呆',
-          '得意',
-          '流泪',
-          '害羞',
-          '闭嘴',
-          '睡',
-          '大哭',
-          '尴尬',
-          '发怒',
-          '调皮',
-          '呲牙',
-          '惊讶',
-          '难过',
-          '酷',
-          '冷汗',
-          '抓狂',
-          '吐',
-          '偷笑',
-          '可爱',
-          '白眼',
-          '傲慢',
-          '饥饿',
-          '困',
-          '惊恐',
-          '流汗',
-          '憨笑',
-          '大兵',
-          '奋斗',
-          '咒骂',
-          '疑问',
-          '嘘',
-          '晕',
-          '折磨',
-          '衰',
-          '骷髅',
-          '敲打',
-          '再见',
-          '擦汗',
-          '抠鼻',
-          '鼓掌',
-          '糗大了',
-          '坏笑',
-          '左哼哼',
-          '右哼哼',
-          '哈欠',
-          '鄙视',
-          '委屈',
-          '快哭了',
-          '阴险',
-          '亲亲',
-          '吓',
-          '可怜',
-          '菜刀',
-          '西瓜',
-          '啤酒',
-          '篮球',
-          '乒乓',
-          '咖啡',
-          '饭',
-          '猪头',
-          '玫瑰',
-          '凋谢',
-          '示爱',
-          '爱心',
-          '心碎',
-          '蛋糕',
-          '闪电',
-          '炸弹',
-          '刀',
-          '足球',
-          '瓢虫',
-          '便便',
-          '月亮',
-          '太阳',
-          '礼物',
-          '拥抱',
-          '强',
-          '弱',
-          '握手',
-          '胜利',
-          '抱拳',
-          '勾引',
-          '拳头',
-          '差劲',
-          '爱你',
-          'NO',
-          'OK',
-          '爱情',
-          '飞吻',
-          '跳跳',
-          '发抖',
-          '怄火',
-          '转圈',
-          '磕头',
-          '回头',
-          '跳绳',
-          '挥手',
-          '激动',
-          '街舞',
-          '献吻',
-          '左太极',
-          '右太极'
+      openAdd() {
+        this.dialogVisible = true;
+      },
+      addExpression() {
+        if (this.wordValue) {
+          this.expression.push(this.wordValue);
+        }
+        this.dialogVisible = false;
+        console.log(this.expression);
+      },
+      handleClose(done) {
+        this.$confirm('确认关闭？')
+          .then(_ => {
+            done();
+          })
+          .catch(_ => {});
+      },
+      appendToText(e) {
+        console.log('选中的常用语', e);
+        this.$refs.emotionEditor.setLocalText(e);
+        this.showExpression = false;
+      },
+
+      blurSearch() {
+        // if(this.searchText==''){
+        //   this.$message.warning("查询条件不能为空");
+        //   return;
+        // }
+        let filterInfo = [];
+        this.chatInfo = [
+          { avatar: '', name: '微信昵称', msg: 'hello', num: 1 },
+          { avatar: '', name: '微信昵称', msg: '哈哈哈', num: 1 },
+          { avatar: '', name: '小可爱', msg: '我只是路过', num: 1 },
+          { avatar: '', name: '哈哈哈', msg: '我是一只小绵羊', num: 1 },
+          { avatar: '', name: '大猪蹄子', msg: '我还有话要说', num: 1 },
+          { avatar: '', name: 'test', msg: '我是一手烤牛油', num: 1 }
         ];
-        let index = list.indexOf(word);
-        return `<img src="https://res.wx.qq.com/mpres/htmledition/images/icon/emotion/${index}.gif" align="middle">`;
+        this.chatInfo.forEach(value => {
+          console.log('filter value', value, 'searchTx', this.searchText);
+          if (value.name && value.name.indexOf(this.searchText) !== -1) {
+            filterInfo.push(value);
+          } else if (value.msg && value.msg.indexOf(this.searchText) !== -1) {
+            filterInfo.push(value);
+          }
+        });
+        this.chatInfo = filterInfo;
+        // console.log('chatInfo:', this.chatInfo, '过滤后的info', filterInfo);
       }
     }
   };
