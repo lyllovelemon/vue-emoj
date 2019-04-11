@@ -1,21 +1,20 @@
 # vue-emoj
 
-> A Vue.js project
+> vue编写的仿微信功能的聊天室，包括表情包与常用语处理
 
-## Build Setup
+## 快速上手
 
 ``` bash
-# install dependencies
+# 安装依赖
 npm install
 
-# serve with hot reload at localhost:8080
+# 本地启动
 npm run dev
 
-# build for production with minification
+# 启动生产版本
 npm run build
 
-# build for production and view the bundle analyzer report
-npm run build --report
 ```
 
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+##作者
+* **lyllovelemon** - *Initial work* - [PurpleBooth](https://github.com/lyllovelemon)
