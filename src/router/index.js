@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import dialog from '../components/dialog/index';
+import next from '../views/tick/index';
 Vue.use(Router)
 
 export default new Router({
@@ -9,6 +10,10 @@ export default new Router({
       path:'/',
       name:'dialog',
       component:dialog
+    },
+    {
+      path:'/tick',
+      component:next
     }
   ]
 })
