@@ -3,7 +3,7 @@
     <div class="main">
       <div class="header">
         <div class="search-bar">
-          <el-input placeholder="搜索" @change="blurSearch" suffix-icon="el-icon-search" v-model="searchText"></el-input>
+          <el-input placeholder="搜索" suffix-icon="el-icon-search" v-model="searchText"></el-input>
         </div>
         <p class="name">粽子</p>
       </div>
@@ -11,7 +11,7 @@
         <!--消息列表-->
         <div class="panel">
           <div class="chat-item" @click="getContact(index)" :class="chatId===index?'active':''"
-               v-for="(item,index) in chatInfo" :key="index">
+               v-for="(item,index) in chatList" :key="index">
             <div class="avatar">
               <img src="./avatar.jpg" alt="">
             </div>
@@ -128,13 +128,26 @@
         dialogVisible: false,
         expression: [
           '你好，请问有什么可以帮到您？',
-          '抱歉让你久等了。',
-          '这是一条很长的常用语但是很长的话打打电话爱仕达拉丝机大数据大数据阿萨砍价的啊将大家的',
-          '这是一条很长的常用语但是很长的话打打电话爱仕达拉丝机大数据大数据阿萨砍价的啊将大家的'
+          '抱歉让你久等了。'
         ],
         wordValue: '',
-        searchText: '搜索'
+        searchText: ''
       };
+    },
+    computed:{
+      chatList(){
+        let search=this.searchText
+        if(!!search && search.length>0){
+          return this.chatInfo.filter(value=>{
+            if (value.name) {
+              return  value.name.indexOf(this.searchText) !== -1;
+            }
+          })
+        }
+        else {
+          return this.chatInfo;
+        }
+      }
     },
     methods: {
       //获取发送消息实时时间(公众号)
@@ -244,31 +257,27 @@
         this.showExpression = false;
       },
 
-      blurSearch() {
-        // if(this.searchText==''){
-        //   this.$message.warning("查询条件不能为空");
-        //   return;
-        // }
-        let filterInfo = [];
-        this.chatInfo = [
-          { avatar: '', name: '微信昵称', msg: 'hello', num: 1 },
-          { avatar: '', name: '微信昵称', msg: '哈哈哈', num: 1 },
-          { avatar: '', name: '小可爱', msg: '我只是路过', num: 1 },
-          { avatar: '', name: '哈哈哈', msg: '我是一只小绵羊', num: 1 },
-          { avatar: '', name: '大猪蹄子', msg: '我还有话要说', num: 1 },
-          { avatar: '', name: 'test', msg: '我是一手烤牛油', num: 1 }
-        ];
-        this.chatInfo.forEach(value => {
-          console.log('filter value', value, 'searchTx', this.searchText);
-          if (value.name && value.name.indexOf(this.searchText) !== -1) {
-            filterInfo.push(value);
-          } else if (value.msg && value.msg.indexOf(this.searchText) !== -1) {
-            filterInfo.push(value);
-          }
-        });
-        this.chatInfo = filterInfo;
-        // console.log('chatInfo:', this.chatInfo, '过滤后的info', filterInfo);
-      }
+      // blurSearch() {
+      //   let filterInfo = [];
+      //   this.chatInfo = [
+      //     { avatar: '', name: '微信昵称', msg: 'hello', num: 1 },
+      //     { avatar: '', name: '微信昵称', msg: '哈哈哈', num: 1 },
+      //     { avatar: '', name: '小可爱', msg: '我只是路过', num: 1 },
+      //     { avatar: '', name: '哈哈哈', msg: '我是一只小绵羊', num: 1 },
+      //     { avatar: '', name: '大猪蹄子', msg: '我还有话要说', num: 1 },
+      //     { avatar: '', name: 'test', msg: '我是一手烤牛油', num: 1 }
+      //   ];
+      //   this.chatInfo.forEach(value => {
+      //     console.log('filter value', value, 'searchTx', this.searchText);
+      //     if (value.name && value.name.indexOf(this.searchText) !== -1) {
+      //       filterInfo.push(value);
+      //     } else if (value.msg && value.msg.indexOf(this.searchText) !== -1) {
+      //       filterInfo.push(value);
+      //     }
+      //   });
+      //   this.chatInfo = filterInfo;
+      //   // console.log('chatInfo:', this.chatInfo, '过滤后的info', filterInfo);
+      // }
     }
   };
 </script>

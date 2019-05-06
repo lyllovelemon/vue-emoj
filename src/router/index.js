@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import dialog from '../components/dialog/index';
+import dialog from '../views/dialog/index';
 import next from '../views/tick/index';
 Vue.use(Router)
 
