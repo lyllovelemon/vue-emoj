@@ -5,7 +5,7 @@
         <div class="search-bar">
           <el-input placeholder="搜索" suffix-icon="el-icon-search" v-model="searchText"></el-input>
         </div>
-        <p class="name">粽子</p>
+        <p class="name">{{chatName}}</p>
       </div>
       <div class="count-view">
         <!--消息列表-->
@@ -95,8 +95,8 @@
     data() {
       return {
         chatInfo: [
-          { avatar: '', name: '微信昵称', msg: 'hello', num: 1 },
-          { avatar: '', name: '微信昵称', msg: '哈哈哈', num: 1 },
+          { avatar: '', name: '柠檬酱', msg: 'hello', num: 1 },
+          { avatar: '', name: 'lemon', msg: '哈哈哈', num: 1 },
           { avatar: '', name: '小可爱', msg: '我只是路过', num: 1 },
           { avatar: '', name: '哈哈哈', msg: '我是一只小绵羊', num: 1 },
           { avatar: '', name: '大猪蹄子', msg: '我还有话要说', num: 1 },
@@ -131,7 +131,8 @@
           '抱歉让你久等了。'
         ],
         wordValue: '',
-        searchText: ''
+        searchText: '',
+        chatName:''
       };
     },
     computed:{
@@ -150,7 +151,7 @@
       }
     },
     methods: {
-      //获取发送消息实时时间(公众号)
+      //获取发送消息实时时间
       getTime() {
         let time = new Date();
         let year = time.getFullYear();
@@ -212,7 +213,7 @@
       getContact(e) {
         this.chatId = e;
         this.chatInfo[e].num = 0;
-        //根据id号查询聊天记录Todo
+        this.chatName=this.chatInfo[e].name;
         console.log('chatId', this.chatId);
       },
       handleSendMsg() {
@@ -256,28 +257,6 @@
         this.$refs.emotionEditor.setLocalText(e);
         this.showExpression = false;
       },
-
-      // blurSearch() {
-      //   let filterInfo = [];
-      //   this.chatInfo = [
-      //     { avatar: '', name: '微信昵称', msg: 'hello', num: 1 },
-      //     { avatar: '', name: '微信昵称', msg: '哈哈哈', num: 1 },
-      //     { avatar: '', name: '小可爱', msg: '我只是路过', num: 1 },
-      //     { avatar: '', name: '哈哈哈', msg: '我是一只小绵羊', num: 1 },
-      //     { avatar: '', name: '大猪蹄子', msg: '我还有话要说', num: 1 },
-      //     { avatar: '', name: 'test', msg: '我是一手烤牛油', num: 1 }
-      //   ];
-      //   this.chatInfo.forEach(value => {
-      //     console.log('filter value', value, 'searchTx', this.searchText);
-      //     if (value.name && value.name.indexOf(this.searchText) !== -1) {
-      //       filterInfo.push(value);
-      //     } else if (value.msg && value.msg.indexOf(this.searchText) !== -1) {
-      //       filterInfo.push(value);
-      //     }
-      //   });
-      //   this.chatInfo = filterInfo;
-      //   // console.log('chatInfo:', this.chatInfo, '过滤后的info', filterInfo);
-      // }
     }
   };
 </script>
