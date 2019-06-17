@@ -21,8 +21,13 @@
             </div>
             <div class="ext" v-if="item.num>0">{{item.num}}</div>
           </div>
+          <div @click="clickMoreLeftChat"
+               class="oa-msg-mgr-more"
+               v-if="chatListQueryParams.hashMore && chatInfo.length!==0">加载更多
+          </div>
         </div>
         <div class="chat-area">
+          <!--<chat-message ref="chatMessage" @session="handleMsgSession"></chat-message>-->
           <div class="scroll-wrapper">
             <!--聊天内容-->
             <div class="chat-content">
@@ -87,20 +92,22 @@
   import './index.less';
   import EmotionEditor from '../../components/emotion-textarea/EmotionEditor.vue';
   import EmotionPanel from '../../components/emotion-textarea/EmotionPanel.vue';
+  import ChatMessage from '../../components/chat-mesage/index';
   export default {
     components: {
       EmotionEditor,
-      EmotionPanel
+      EmotionPanel,
+      ChatMessage
     },
     data() {
       return {
         chatInfo: [
-          { avatar: '', name: '柠檬酱', msg: 'hello', num: 1 },
-          { avatar: '', name: 'lemon', msg: '哈哈哈', num: 1 },
-          { avatar: '', name: '小可爱', msg: '我只是路过', num: 1 },
-          { avatar: '', name: '哈哈哈', msg: '我是一只小绵羊', num: 1 },
-          { avatar: '', name: '大猪蹄子', msg: '我还有话要说', num: 1 },
-          { avatar: '', name: 'test', msg: '我是一手烤牛油', num: 1 }
+          { avatar: '', name: '柠檬酱', msg: 'hello', num: 1,reply:false,status:true,id:42,msgType:'text' },
+          { avatar: '', name: 'lemon', msg: '哈哈哈', num: 1,reply:false,status:true,id:45,msgType:'text' },
+          { avatar: '', name: '小可爱', msg: '我只是路过', num: 1,reply:false,status:true,id:36,msgType:'text' },
+          { avatar: '', name: '哈哈哈', msg: '我是一只小绵羊', num: 1,reply:false,status:true,id:50,msgType:'text' },
+          { avatar: '', name: '大猪蹄子', msg: '我还有话要说', num: 1,reply:false,status:true,id:18,msgType:'text' },
+          { avatar: '', name: 'test', msg: '我是一手烤牛油', num: 1,reply:false,status:true,id:66,msgType:'text' }
         ],
         isShow: false,
         sendMsg: [
@@ -132,7 +139,18 @@
         ],
         wordValue: '',
         searchText: '',
-        chatName:''
+        chatName:'',
+        isSessionOut: false,
+        loop: {
+          left: 0
+        },
+        chatListQueryParams: {
+          pageNo: 1,
+          pageSize: 10,
+          nickname: '',
+          hashMore: true,
+          _loading: false
+        }
       };
     },
     computed:{
@@ -256,6 +274,36 @@
         console.log('选中的常用语', e);
         this.$refs.emotionEditor.setLocalText(e);
         this.showExpression = false;
+      },
+      handleMsgSession(e) {
+        this.isSessionOut = e;
+        // console.log('isSessionOut', e);
+      },
+      clickMoreLeftChat() {
+        if (this.chatListQueryParams.hashMore) {
+          this.getLeftChatList();
+        }
+      },
+      isFreshLeft() {
+        return !!this.loop && this.chatListQueryParams._loading;
+      },
+      //获得客服消息列表
+      getLeftChatList(fresh) {
+        // if (this.isFreshLeft()) {
+        //   return;
+        // }
+        // if (fresh) {
+        //   this.chatListQueryParams.pageNo = 1;
+        //   this.chatListQueryParams.hashMore = true;
+        //   this.chatInfo = [];
+        // } else {
+        //   this.chatListQueryParams.pageNo += 1;
+        // }
+        //
+        // this.apiList(this.chatListQueryParams, this.chatInfo).always(() => {
+        //   this.chatListQueryParams._loading = false;
+        //   this.startLoopFreshLeft();
+        // });
       },
     }
   };
