@@ -68,6 +68,7 @@
     display: inline-block;
     vertical-align: middle;
     position: relative;
+    right: 240px;
     font-size: 14px;
     ._switch {
       float: left;
