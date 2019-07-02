@@ -2,10 +2,15 @@
   <div class="wx-ste">
     <div class="ql-editor ql-blank"
          ref="myEditor"
-         contentEditable="true"
-         :style="{height:editorHeight+'px',fontSize:editorFontSize+'px'}"
-         @blur="getServerText"
+         :contentEditable="editable"
+         :data-placeholder="editable ? '这里输入内容!' : ''"
+         :style="{height:editorHeight,fontSize:editorFontSize+'px'}"
+         @blur="tryStore"
          data-placeholder="这里输入内容!"></div>
+    <template v-if="editable">
+      <p class="tip" v-if="leftInput>0">还可以输入<em>{{leftInput}}</em>字</p>
+      <p class="tip" style="color: red;" v-else>超出字数限制</p>
+    </template>
   </div>
 </template>
 
@@ -15,6 +20,8 @@
   import emoji from '../emoji/index';
   const ImgReg = new RegExp('<img[^>]*>', 'g');
   const TitleReg = new RegExp(new RegExp('\\[(.*)\\]'));
+  const TagReg = new RegExp('<[^>]*>[^<]*</[^>]*>', 'g');
+  const TextReg = new RegExp('>([\\s|\\S]*)<', 'g');
 
   export default {
     props: {
@@ -22,16 +29,24 @@
         type: Object
       },
       editorHeight: {
-        type: Number,
-        default: 100
+        type: String,
+        default: '100px'
       },
       editorFontSize: {
         type: Number,
         default: 14
       },
+      editable: {
+        type: Boolean,
+        default: true
+      },
       writeHandler: {
         type: Function,
         default: null
+      },
+      maxLength: {
+        type: Number,
+        default: 500
       }
     },
     components: {
@@ -45,8 +60,7 @@
     },
     data() {
       return {
-        MAX_LENGTH: 600,
-        leftInput: 600,
+        leftInput: 500,
         editor: null,
         savedRange: null,
         doc: null,
@@ -115,26 +129,54 @@
         }
       },
 
+      _safe(text) {
+        return text
+          .replace(TagReg, inner => {
+            let m = inner.match(TextReg);
+            if (!!m && m[0] && m[0].length > 2) {
+              return '\n' + m[0].substr(1, m[0].length - 2);
+            }
+            return '';
+          })
+          .replace(new RegExp('&nbps;', 'g'), ' ');
+      },
+      filterSafeHtml(text) {
+        text = text.replace(/\<br\>/g, '\n');
+        text = text.replace(/&nbsp;/g, ' ');
+        text = this._safe(text);
+        if (TagReg.test(text)) {
+          text = this._safe(text);
+        }
+        return text;
+      },
+
       tryStore(slient) {
-        const cache = this.getMyEditor().innerHTML.replace(ImgReg, function(img) {
+        let cache = this.getMyEditor().innerHTML.replace(ImgReg, function(img) {
           const match = img.match(TitleReg);
           if (!!match && !!match[0]) {
             return match[0];
           }
           return '';
         });
-        this.leftInput = this.MAX_LENGTH - cache.length;
+        cache = this.filterSafeHtml(cache);
+        this.leftInput = this.maxLength - cache.length;
         if (!slient && !!this.writeHandler) {
           this.writeHandler(cache);
         }
         return cache;
       },
 
-      getServerText() {
-        return this.tryStore();
+      verifyText() {
+        const cache = this.tryStore();
+        if (!cache.length) {
+          return '文本不能为空';
+        } else if (cache.length > this.maxLength) {
+          return '文本长度超过最大长度' + this.maxLength;
+        }
       },
 
       empty() {
+        this.leftInput = 500;
         return (this.getMyEditor().innerHTML = '');
       },
 
@@ -145,6 +187,10 @@
         this.win.focus();
         this.setCaretPosition();
         this.doc.execCommand('insertHTML', '', value);
+        this.getCaretCharacterOffsetWithin();
+      },
+      focusEditor() {
+        this.getMyEditor().focus();
         this.getCaretCharacterOffsetWithin();
       }
     },
@@ -165,6 +211,11 @@
         }
         this.getCaretCharacterOffsetWithin();
       };
+
+      //bugfix: 当进入编辑器时，点击表情，选择的表情无法显示
+      this.$nextTick(() => {
+        this.focusEditor();
+      });
     }
   };
 </script>
@@ -181,7 +232,7 @@
     position: relative;
     border-top: 1px solid #E4E8EB;
     .ql-editor {
-      padding: 14px 20px;
+      padding: 14px 15px;
       outline: 0;
       word-wrap: break-word;
       -webkit-hyphens: auto;
@@ -189,6 +240,16 @@
       hyphens: auto;
       background-color: #FFFFFF;
       overflow-y: auto;
+      /*height: 80px!important;*/
+      box-sizing: border-box;
+    }
+    .ql-editor::-webkit-scrollbar{
+      width: 4px;
+      height: 4px;
+    }
+    .ql-editor::-webkit-scrollbar-thumb {
+      border-radius: 5px;
+      box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
     }
     .ql-editor.ql-blank::before {
       color: rgba(0, 0, 0, 0.6);
@@ -197,6 +258,15 @@
       pointer-events: none;
       position: absolute;
       right: 15px;
+    }
+    .tip{
+      position: absolute;
+      right: 150px;
+      bottom: -30px;
+      z-index: 22;
+      ._err{
+        color: #FB4938;
+      }
     }
   }
 

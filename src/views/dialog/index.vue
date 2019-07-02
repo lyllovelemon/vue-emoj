@@ -21,10 +21,10 @@
             </div>
             <div class="ext" v-if="item.num>0">{{item.num}}</div>
           </div>
-          <div @click="clickMoreLeftChat"
-               class="oa-msg-mgr-more"
-               v-if="chatListQueryParams.hashMore && chatInfo.length!==0">加载更多
-          </div>
+          <!--<div @click="clickMoreLeftChat"-->
+               <!--class="oa-msg-mgr-more"-->
+               <!--v-if="chatListQueryParams.hashMore && chatInfo.length!==0">加载更多-->
+          <!--</div>-->
         </div>
         <div class="chat-area">
           <!--<chat-message ref="chatMessage" @session="handleMsgSession"></chat-message>-->
