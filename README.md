@@ -2,7 +2,7 @@
 
 > vue编写的仿微信功能的聊天室，包括表情包与常用语处理
 ## 预览
- ![https://github.com/lyllovelemon/vue-emoj/blob/master/src/gif/a.gif]
+https://github.com/lyllovelemon/vue-emoj/blob/master/src/gif/a.gif
 
 ## 主要功能
 + 支持文字
