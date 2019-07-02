@@ -21,10 +21,6 @@
             </div>
             <div class="ext" v-if="item.num>0">{{item.num}}</div>
           </div>
-          <!--<div @click="clickMoreLeftChat"-->
-               <!--class="oa-msg-mgr-more"-->
-               <!--v-if="chatListQueryParams.hashMore && chatInfo.length!==0">加载更多-->
-          <!--</div>-->
         </div>
         <div class="chat-area">
           <!--<chat-message ref="chatMessage" @session="handleMsgSession"></chat-message>-->
@@ -288,23 +284,9 @@
         return !!this.loop && this.chatListQueryParams._loading;
       },
       //获得客服消息列表
-      getLeftChatList(fresh) {
-        // if (this.isFreshLeft()) {
-        //   return;
-        // }
-        // if (fresh) {
-        //   this.chatListQueryParams.pageNo = 1;
-        //   this.chatListQueryParams.hashMore = true;
-        //   this.chatInfo = [];
-        // } else {
-        //   this.chatListQueryParams.pageNo += 1;
-        // }
-        //
-        // this.apiList(this.chatListQueryParams, this.chatInfo).always(() => {
-        //   this.chatListQueryParams._loading = false;
-        //   this.startLoopFreshLeft();
-        // });
-      },
+      // getLeftChatList(fresh) {
+      //
+      // },
     }
   };
 </script>
