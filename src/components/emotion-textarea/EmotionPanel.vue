@@ -67,9 +67,8 @@
   .emotion-panel {
     display: inline-block;
     vertical-align: middle;
-    position: relative;
-    right: 240px;
     font-size: 14px;
+    margin-left: 50px;
     ._switch {
       float: left;
       line-height: 999em;
@@ -149,20 +148,25 @@
   .block_emotion {
     position: relative;
     z-index: 1;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
     .item_emotion {
-      float: left;
       width: 24px;
       height: 24px;
-      line-height: 24px;
       font-size: 0;
-      text-align: center;
+      display: flex;
+      justify-content: center;
+      align-content: center;
       background-color: #FFFFFF;
     }
   }
 
   .emotion-panel-up{
     ._popover {
-      top: -180px;
+      top: -190px;
+      left: 60px;
     }
     ._popover:after {
       top: 172px;

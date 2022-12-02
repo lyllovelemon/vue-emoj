@@ -231,6 +231,7 @@
   .wx-ste {
     position: relative;
     border-top: 1px solid #E4E8EB;
+    text-align: left;
     .ql-editor {
       padding: 14px 15px;
       outline: 0;

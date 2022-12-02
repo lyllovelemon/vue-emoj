@@ -5,9 +5,12 @@
 https://github.com/lyllovelemon/vue-emoj/blob/master/src/gif/a.gif
 
 ## 主要功能
++ 多人聊天
 + 支持文字
 + 支持表情包
-+ 支持搜索功能
++ 支持聊天对象模糊搜索
++ 聊天信息时间展示
++ 聊天信息字数控制
 
 ## 快速上手
 

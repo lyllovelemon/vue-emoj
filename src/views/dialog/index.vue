@@ -228,7 +228,6 @@
         this.chatId = e;
         this.chatInfo[e].num = 0;
         this.chatName=this.chatInfo[e].name;
-        console.log('chatId', this.chatId);
       },
       handleSendMsg() {
         const cache = this.$refs.emotionEditor.getLocalText();
@@ -236,14 +235,12 @@
           this.sendMsg[this.chatId].msg.push(cache);
           this.getTime();
           this.sendMsg[this.chatId].date.push(this.sendDate);
-          console.log('我发送的msg', this.sendMsg);
           setTimeout(() => {
             this.$refs.emotionEditor.empty();
           }, 200);
         }
       },
       onPickedEmoji(img) {
-        console.log('onPickedEmoji', img);
         this.$refs.emotionEditor.insertEmoji(img);
       },
       onPickedExpression() {
@@ -257,7 +254,6 @@
           this.expression.push(this.wordValue);
         }
         this.dialogVisible = false;
-        console.log(this.expression);
       },
       handleClose(done) {
         this.$confirm('确认关闭？')
@@ -267,7 +263,6 @@
           .catch(_ => {});
       },
       appendToText(e) {
-        console.log('选中的常用语', e);
         this.$refs.emotionEditor.setLocalText(e);
         this.showExpression = false;
       },

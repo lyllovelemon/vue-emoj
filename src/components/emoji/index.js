@@ -17,6 +17,22 @@ function getBp(y) {
   return `0 -${y}px`;
 }
 
+function calculateYPosition(c,e) {
+  let yPosition
+  if(c>=96){
+    yPosition = c*e-(4-c%16)
+  }
+  if((c>=64 && c<=77)||c>=80){
+    yPosition = c*e-(5-c%16)
+  }
+  else {
+    yPosition = c>=1 && c<=15?(c* e)+c:(c* e)+(c%16)
+  }
+
+
+  return yPosition
+}
+
 function init() {
   let e = props.emojiHeight,
     t = props.rowCount,
@@ -33,12 +49,13 @@ function init() {
     for (let l = 0; l < t; l++) {
       let c = m * t + l;
       if (i[c]) {
+        let yPosition = calculateYPosition(c,e)
         Icons.push(
           (IconNameMap[i[c].cn] = {
             index: Icons.length,
             name: i[c].cn,
             emoji: i[c].emoji || '',
-            bp: getBp(c * e)
+            bp: getBp(yPosition)
           })
         );
       }
